@@ -47,6 +47,8 @@ use Games::Crossword::Puzzle::Cell;
 
 =head1 METHODS
 
+=head2 from_file
+
   my $puzzle = Games::Crossword::Puzzle->from_file($filename);
 
 This method reads in a puzzle file and returns a puzzle object.  It will raise
