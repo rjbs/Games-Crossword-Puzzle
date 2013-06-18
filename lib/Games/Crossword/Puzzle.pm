@@ -93,13 +93,37 @@ sub from_file {
     push @clues, $clue;
   }
 
-  $self->__build_grid(\$solution, \$guess, \@clues);
   $self->{notes} = $self->_read_nul_string($fh);
+
+  my $tables = $self->_read_tables($fh);
+
+  $self->__build_grid(\$solution, \$guess, \@clues, $tables);
 
   return $self;
 }
 
+sub _read_tables {
+  my ($self, $fh) = @_;
+
+  my %return;
+
+  while (! eof $fh) {
+    read($fh, my $front, 8) or die "error reading table: $!";
+
+    my ($title, $len, $ck) = unpack "A4SS", $front;
+    read($fh, my $data, $len) or die "error reading table $title: $!";
+
+    read($fh, my $nul, 1) or die "error reading table $title: $!";
+    die "data for $title table not nul-terminated" unless $nul eq "\0";
+
+    $return{ $title } = $data;
+  }
+
+  return \%return;
+}
+
 =head2 height
+
 
 =head2 width
 
@@ -119,7 +143,7 @@ Each arrayref is populated with Games::Crossword::Puzzle::Cell objects.
 
 sub rows {
   my ($self) = @_;
-  
+
   return @{ $self->{grid} };
 }
 
@@ -155,17 +179,22 @@ This method returns the puzzle's author.
 
 This method returns the puzzle's copyright information.
 
+=head2 copyright
+
+This method returns the puzzle's "note," if any.
+
 =cut
 
 sub title     { $_[0]->{title} }
 sub author    { $_[0]->{author} }
 sub copyright { $_[0]->{copyright} }
+sub note      { $_[0]->{note} }
 
 # Iterate through the grid, building the Cell objects.
 # Figure out which cells are going to have clues and assign the clues from the
 # input stack to cells.
 sub __build_grid {
-  my ($self, $solution_ref, $guess_ref, $clues) = @_;
+  my ($self, $solution_ref, $guess_ref, $clues, $tables) = @_;
   my @grid;
   $#grid = $self->height - 1;
 
@@ -180,7 +209,7 @@ sub __build_grid {
     for my $col (0 .. $#row) {
       my $byte = $row * $self->width  +  $col;
       my %square = (
-        value  => $self->_grid_xy_char($solution_ref, $col, $row),
+        value  => $self->_grid_xy_char($solution_ref, $col, $row, $tables),
         guess  => $self->_grid_xy_char($guess_ref,    $col, $row),
       );
 
@@ -224,11 +253,27 @@ sub _read_nul_string {
 }
 
 sub _grid_xy_char {
-  my ($self, $str_ref, $x, $y) = @_;
+  my ($self, $str_ref, $x, $y, $tables) = @_;
 
   return if $x >= $self->width or $y >= $self->height;
 
   my $index = $y * $self->width  +  $x;
+
+  if ($tables and $tables->{GRBS} and $tables->{RTBL}) {
+    my $rebus = substr $tables->{GRBS}, $index, 1;
+    if (my $which = ord $rebus) {
+      # do this elsewhere, cache it; forget about it, Jake, it's Chinatown
+      my %for;
+      for my $pair (split /;/, $tables->{RTBL}) {
+        my ($k, $v) = split /:/, $pair;
+        $k =~ s/ //g;
+        $for{$k} = $v;
+      }
+      die "can't resolve rebus" unless defined $for{ $which - 1 };
+      return $for{ $which - 1 }
+    }
+  }
+
   return substr $$str_ref, $index, 1;
 }
 
