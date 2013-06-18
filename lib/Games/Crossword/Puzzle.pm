@@ -94,6 +94,7 @@ sub from_file {
   }
 
   $self->__build_grid(\$solution, \$guess, \@clues);
+  $self->{notes} = $self->_read_nul_string($fh);
 
   return $self;
 }

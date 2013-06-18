@@ -1,23 +1,26 @@
 #!/usr/bin/perl
-
 use strict;
 use warnings;
 
+use Encode qw(encode decode);
 use Games::Crossword::Puzzle;
+
+sub xcode { return encode('utf-8', decode('ISO-8859-1', $_[0])) }
 
 my $filename = $ARGV[0];
 my $html_out = $ARGV[1];
 
 my $puzzle = Games::Crossword::Puzzle->from_file($filename);
 
-printf "TITLE : %s\n", $puzzle->title;
-printf "AUTHOR: %s\n", $puzzle->author;
-printf "(C)   : %s\n", $puzzle->copyright || '';
+printf "TITLE : %s\n", xcode( $puzzle->title );
+printf "AUTHOR: %s\n", xcode( $puzzle->author );
+printf "(C)   : %s\n", xcode( $puzzle->copyright || '' );
+printf "NOTE  : %s\n", xcode( $puzzle->note      || '' );
 
 for my $line (@{ $puzzle->{grid} }) {
-  print join q{}, (map { defined $_->value ? $_->value : '.' } @$line);
+  print join q{}, map { $_->value // '.' } @$line;
   print "    ";
-  print join q{}, (map { defined $_->guess ? $_->guess : defined $_->value ? '-' : '.' } @$line);
+  print join q{}, map { $_->guess // (defined $_->value ? '-' : '.') } @$line;
   print "\n";
 }
 
