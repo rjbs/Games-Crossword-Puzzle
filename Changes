@@ -1,6 +1,8 @@
 Changelog for Games-Crossword-Puzzle
 
 {{$NEXT}}
+
+0.002     2013-06-18 18:48:29 America/New_York
           basic support for "rebuses" cells, in which more than one letter gets
           written in teeny tiny handwriting
 
