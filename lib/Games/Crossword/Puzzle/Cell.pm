@@ -1,28 +1,11 @@
-
 use strict;
 use warnings;
-
 package Games::Crossword::Puzzle::Cell;
-
-=head1 NAME
-
-Games::Crossword::Puzzle::Cell - one of those little square bits with a number
-
-=head1 VERSION
-
-version 0.001
-
-  $Id$
-
-=cut
-
-our $VERSION = '0.001';
+# ABSTRACT:  one of those little square bits with a number
 
 use Carp ();
 
-=head1 METHODS
-
-=head2 new
+=method new
 
   my $cell = Games::Crossword::Puzzle::Cell->new(\%arg);
 
@@ -50,9 +33,9 @@ sub new {
   bless $data => $class;
 }
 
-=head2 across
+=method across
 
-=head2 down
+=method down
 
 These methods return the clues for the word beginning in this cell, if any.
 
@@ -61,7 +44,7 @@ These methods return the clues for the word beginning in this cell, if any.
 sub across { $_[0]->{across} }
 sub down   { $_[0]->{down} }
 
-=head2 number
+=method number
 
 This method returns the cell's number, if it is numbered.
 
@@ -69,16 +52,17 @@ This method returns the cell's number, if it is numbered.
 
 sub number { $_[0]->{number} }
 
-=head2 value
+=method value
 
 This returns the value that should appear in the cell.  It returns undef for
-black cells.
+black cells.  Note that this may be more than one character, in case of a
+rebus.
 
 =cut
 
 sub value  { $_[0]->{value} }
 
-=head2 guess
+=method guess
 
 This returns the value that has been filled into the cell by the user.  It
 returns undef for black or empty cells.
@@ -86,14 +70,5 @@ returns undef for black or empty cells.
 =cut
 
 sub guess  { $_[0]->{guess} }
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright 2007 Ricardo SIGNES, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
-
-=cut
 
 1;

@@ -1,22 +1,7 @@
-
 use strict;
 use warnings;
-
 package Games::Crossword::Puzzle;
-
-=head1 NAME
-
-Games::Crossword::Puzzle - six letters for "reusable unit of code"
-
-=head1 VERSION
-
-version 0.001
-
-  $Id$
-
-=cut
-
-our $VERSION = '0.001';
+# ABSTRACT: six letters for "reusable unit of code"
 
 =head1 SYNOPSIS
 
@@ -45,9 +30,7 @@ A puzzle is a rectangular grid of L<Games::Crossword::Puzzle::Cell> objects.
 use Carp ();
 use Games::Crossword::Puzzle::Cell;
 
-=head1 METHODS
-
-=head2 from_file
+=method from_file
 
   my $puzzle = Games::Crossword::Puzzle->from_file($filename);
 
@@ -122,19 +105,18 @@ sub _read_tables {
   return \%return;
 }
 
-=head2 height
+=method height
 
+=method width
 
-=head2 width
-
-These method return the height and width of the puzzle grid.
+These methods return the height and width of the puzzle grid.
 
 =cut
 
 sub height { $_[0]->{height} }
 sub width  { $_[0]->{width} }
 
-=head2 rows
+=method rows
 
 This method returns a list of arrayrefs, each representing one row of the grid.
 Each arrayref is populated with Games::Crossword::Puzzle::Cell objects.
@@ -147,7 +129,7 @@ sub rows {
   return @{ $self->{grid} };
 }
 
-=head2 cell
+=method cell
 
   my $cell = $puzzle->cell($number);
 
@@ -167,19 +149,19 @@ sub cell {
   return $self->{number}{$number};
 }
 
-=head2 title
+=method title
 
 This method returns the puzzle's title.
 
-=head2 author
+=method author
 
 This method returns the puzzle's author.
 
-=head2 copyright
+=method copyright
 
 This method returns the puzzle's copyright information.
 
-=head2 copyright
+=method note
 
 This method returns the puzzle's "note," if any.
 
@@ -299,17 +281,6 @@ sub _has_down_clue {
   return 1;
 }
 
-=head1 AUTHOR
-
-Ricardo SIGNES, C<< <rjbs at cpan.org> >>
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright 2007 Ricardo SIGNES, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
-
 =head1 CAVEATS
 
 While there is some basic checking that the input file really is a puzzle file,
@@ -331,12 +302,9 @@ into the weird "PUZ" format it used.  I wrote this module as phase one in
 producing my own free crossword software, possibly a PUZ-to-DHTML sort of
 thing.  (Warning: I have been known to quit after phase one.)
 
-=head1 COPYRIGHT & LICENSE
-
-Copyright 2007 Ricardo SIGNES, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+(My loving wife later bought me a copy of Black Ink, so I didn't have much
+reason to keep working on this, but I did finally add some basic rebus cell
+parsing six years later.)
 
 =cut
 

@@ -1,4 +1,10 @@
 Changelog for Games-Crossword-Puzzle
 
-0.001    2007-04-27
-         first release!
+{{$NEXT}}
+          basic support for "rebuses" cells, in which more than one letter gets
+          written in teeny tiny handwriting
+
+          repackage with dzil, updating support channels, etc.
+
+0.001     2007-04-27
+          first release!
