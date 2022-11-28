@@ -1,6 +1,7 @@
 Changelog for Games-Crossword-Puzzle
 
 {{$NEXT}}
+        - update packaging and metadata
 
 0.003     2013-08-27 23:34:47 America/New_York
           fix repo capitalization, update bugtracker
